@@ -1,4 +1,4 @@
-// 백준 문제 : 비숍
+// 백준 문제 : 비숍 (시간초과)
 
 #include <iostream>
 #include <vector>
@@ -17,36 +17,52 @@ int main(){
     int N;
     cin >> N;
 
-    vector<pair<int,int>> mask; // {일렬 인덱스, (0: 비숍 배치 X, 1: 실제 비숍 배치)}
+    vector<pair<int,int>> locations;
+    vector<int> mask; // (0: 비숍 배치 안 한곳, 1: 비숍 배치 한 곳) 
     int board[N][N];
     for(int i=0;i<N;i++){
         for(int j=0;j<N;j++){
             cin >> board[i][j];
-            if(board[i][j] == 1) mask.push_back({i*N+j,0});
+            if(board[i][j] == 1){
+                locations.push_back({i,j});
+                mask.push_back(0); // 우선 비숍 배치 안 한 곳으로 초기화
+            } 
         }
     }
 
-    // next_permutation 이란 {1, 2, 3}을 {3, 2, 1} 처럼 섞는것
     bool isFail = false;
-    int ans = 1;
-    while(isFail == false){
-        for(int i=0;i<N*N;i++){
-            mask[]
-            for(int j=0;j<ans;j++){
-
-            }
-        }
-
+    int ans = 0;
+    while(isFail == false){ // 어떤 수로도 해당 수의 비숍을 놓을 수 없을 때 반복 종료
+        isFail = true;
+        fill(mask.begin(),mask.begin()+ans,1);
+        fill(mask.begin()+ans,mask.end(),0);
+        sort(mask.begin(),mask.end());
+        // cout << "ans : " << ans << "\n";
+        
         do {
-            vector<vector<int>> realBoard(N,vector<int>(N,0));
+            // cout << "==================\n";
+            // for(auto m:mask){
+            //     cout << m << " ";
+            // }
+            // cout << "\n";
+
+
+            vector<vector<int>> realBoard(N,vector<int>(N,0)); // (0: 비숍 배치 안 한곳, 1: 비숍 배치 한 곳) 
             queue<pair<int,int>> qp;
             bool isSubFail = false;
-            for(auto m:mask){
-                if(m.second == 1){
-                    realBoard[m.first/N][m.first%N] = 1;
-                    qp.push({m.first/N,m.first%N});
+            for(int i=0;i<mask.size();i++){
+                if(mask[i] == 1){
+                    realBoard[locations[i].first][locations[i].second] = 1;
+                    qp.push({locations[i].first,locations[i].second});
                 }
             }
+
+            // for(int i=0;i<N;i++){
+            //     for(int j=0;j<N;j++){
+            //         cout << realBoard[i][j] << " ";
+            //     }
+            //     cout << "\n";
+            // }
 
             while(!qp.empty() && isSubFail == false){
                 auto cur = qp.front(); qp.pop();
@@ -69,13 +85,16 @@ int main(){
             }
 
             if(isSubFail == false){
+                // cout << "isSubFail false\n";
+                isFail = false;
                 ans++;
                 break;
             } else {
-
+                // cout << "isSubFail true\n";
             }
-
 
         } while(next_permutation(mask.begin(), mask.end()));
     }
+    
+    cout << ans-1 << "\n";
 }

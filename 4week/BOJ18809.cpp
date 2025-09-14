@@ -20,7 +20,7 @@ int main(){
     
     int board[N][M]; // (0: 호수, 1,2 : 땅, 3 : 초록 배양액, 4: 빨간 배양액, 5: 꽃)
     vector<pair<int,int>> locations; // 배양액을 뿌릴 수 있는 땅의 인덱스 {y,x}
-    vector<int> mask; // (1: 배양액 없음, 2: 초록 배양액, 3: 빨강 배양액)
+    vector<int> mask {2, 1, 1, 3, 2, 3, 2, 1, 1, 3}; // (1: 배양액 없음, 2: 초록 배양액, 3: 빨강 배양액)
     int gCnt = 0;
     int rCnt = 0;
     for(int i=0;i<N;i++){
@@ -30,15 +30,15 @@ int main(){
             // 조합을 생성할 mask 집합에 원소 넣기
             if(board[i][j] == 2){
                 locations.push_back({i,j});
-                if(gCnt < G){
-                    mask.push_back(2);
-                    gCnt++;
-                } else if(rCnt < R){
-                    mask.push_back(3);
-                    rCnt++;
-                } else {
-                    mask.push_back(1);
-                }
+                // if(gCnt < G){
+                //     mask.push_back(2);
+                //     gCnt++;
+                // } else if(rCnt < R){
+                //     mask.push_back(3);
+                //     rCnt++;
+                // } else {
+                //     mask.push_back(1);
+                // }
             }
         }
     }
@@ -47,10 +47,11 @@ int main(){
     // }
 
     int ans = 0;
-    do {
+    // do {
         for(int i=0;i<mask.size();i++){
-            cout << i << " : " << mask[i] << "\n";
+            cout << mask[i] << " ";
         }
+        cout << "\n";
         // board를 각 조합마다 사용할 realBoard에 복사
         int realBoard[N][M];
         for(int i=0;i<N;i++){
@@ -112,7 +113,7 @@ int main(){
                                 }
                             } else if(nxtColor == 3){
                                 if(isBlooming[nxtY][nxtX] == 0){ 
-                                    isBlooming[nxtY][nxtX] = 1;
+                                    isBlooming[nxtY][nxtX] = 2;
                                     qt2.push(make_tuple(nxtY,nxtX,3));
                                 } else if(isBlooming[nxtY][nxtX] == 1){
                                     isBlooming[nxtY][nxtX] = 3;
@@ -156,9 +157,21 @@ int main(){
                 break;
             }
         }
-        cout << "flowerCnt : " << flowerCnt << "\n";
+        // cout << "flowerCnt : " << flowerCnt << "\n";
         ans = max(ans,flowerCnt);
-    } while(next_permutation(mask.begin(),mask.end()));
+        // if(flowerCnt == 8){
+        //     for(int i=0;i<mask.size();i++){
+        //         cout << mask[i] << " ";
+        //     }
+        //     cout << "\n";
+        //     for(int i=0;i<N;i++){
+        //         for(int j=0;j<M;j++){
+        //             cout << realBoard[i][j] << " ";
+        //         }
+        //         cout << "\n";
+        //     }
+        // }
+    // } while(next_permutation(mask.begin(),mask.end()));
 
     cout << ans << "\n";
 }
