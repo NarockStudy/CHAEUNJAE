@@ -1,4 +1,4 @@
-// 백준 문제 : 비숍 (시간초과)
+// 백준 문제 : 비숍 (3% 시간초과)
 
 #include <iostream>
 #include <vector>
