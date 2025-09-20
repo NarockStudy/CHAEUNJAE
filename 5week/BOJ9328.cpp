@@ -1,4 +1,4 @@
-// 백준 문제 : 열쇠
+// 백준 문제 : 열쇠 (visited 제거 버전)
 
 #include <iostream>
 #include <vector>
@@ -23,7 +23,7 @@ int main(){
 
         queue<pair<int,int>> qp;
         vector<pair<int,int>> doors[26];
-        bool visited[h][w];
+        // bool visited[h][w];
         char board[h][w];
         int keys[26];
         fill(keys,keys+26,0);
@@ -34,22 +34,23 @@ int main(){
             for(int z=0;z<w;z++){
                 // 배열 초기화
                 board[j][z] = str[z];
-                visited[j][z] = false;
+                // visited[j][z] = false;
                 
                 // 빌딩 모서리 탐색
                 if(j == 0 || j == h-1 || z == 0 || z == w-1){ // 빌딩의 모서리 중 
                     if(board[j][z] == '.'){ // 빈 공간이 있으면 큐에 푸쉬
                         qp.push({j,z});
-                        visited[j][z] = true;
+                        board[j][z] = '-'; // '-'는 방문한 칸을 의미
+                        // visited[j][z] = true;
                     } else if(islower(board[j][z])){ // 열쇠가 있을 때
                         qp.push({j,z});
-                        visited[j][z] = true;
+                        // visited[j][z] = true;
                         keys[board[j][z] - 'a'] = 1;
-                        board[j][z] = '.';
+                        board[j][z] = '-';
                     } else if(board[j][z] == '$'){ // 문서가 있을 때
                         qp.push({j,z});
-                        visited[j][z] = true;
-                        board[j][z] = '.';
+                        // visited[j][z] = true;
+                        board[j][z] = '-';
                         ans++;
                     }
                 }
@@ -72,8 +73,8 @@ int main(){
                     if(isupper(board[j][z])){ // 문일 때
                         if(keys[tolower(board[j][z])-'a'] == 1){ // 열쇠가 있다면 큐에 넣고 방문 처리
                             qp.push({j,z});
-                            visited[j][z] = true;
-                            board[j][z] = '.';
+                            // visited[j][z] = true;
+                            board[j][z] = '-';
                         } else {
                             doors[board[j][z]-'A'].push_back({j,z});
                         }
@@ -93,27 +94,27 @@ int main(){
                     // 열쇠일 때
                     if(islower(board[nxtY][nxtX])){
                         qp.push({nxtY,nxtX});
-                        visited[nxtY][nxtX] = true;
+                        // visited[nxtY][nxtX] = true;
                         keys[board[nxtY][nxtX]-'a'] = 1;
 
                         if(!doors[toupper(board[nxtY][nxtX])-'A'].empty()){ // 해당하는 문들을 다 열기
                             for(auto door:doors[toupper(board[nxtY][nxtX])-'A']){
                                 // board 삭제
                                 // queue 넣기
-                                board[door.first][door.second] = '.';
+                                board[door.first][door.second] = '-';
                                 qp.push({door.first,door.second});
-                                visited[door.first][door.second] = true;
+                                // visited[door.first][door.second] = true;
                             }
                         }
-                        board[nxtY][nxtX] = '.';
+                        board[nxtY][nxtX] = '-';
                     }
 
                     // 문일 때
                     else if(isupper(board[nxtY][nxtX])){
                         if(keys[tolower(board[nxtY][nxtX])-'a'] == 1){ // 열쇠가 있다면 큐에 넣고 방문 처리
                             qp.push({nxtY,nxtX});
-                            visited[nxtY][nxtX] = true;
-                            board[nxtY][nxtX] = '.';
+                            // visited[nxtY][nxtX] = true;
+                            board[nxtY][nxtX] = '-';
                         } else {
                             doors[tolower(board[nxtY][nxtX])-'a'].push_back({nxtY,nxtX});
                         }
@@ -122,15 +123,16 @@ int main(){
                     // 문서일 때
                     else if(board[nxtY][nxtX] == '$'){
                         qp.push({nxtY,nxtX});
-                        visited[nxtY][nxtX] = true;
-                        board[nxtY][nxtX] = '.';
+                        // visited[nxtY][nxtX] = true;
+                        board[nxtY][nxtX] = '-';
                         ans++;
                     }
 
                     // 빈 곳일 때
-                    else if(board[nxtY][nxtX] == '.' && visited[nxtY][nxtX] == false){
+                    else if(board[nxtY][nxtX] == '.'){
                         qp.push({nxtY,nxtX});
-                        visited[nxtY][nxtX] = true;
+                        // visited[nxtY][nxtX] = true;
+                        board[nxtY][nxtX] = '-';
                     }
 
                 }
